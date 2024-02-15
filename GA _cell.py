@@ -17,10 +17,10 @@ def mutate(weight):
 POP_A = 120
 POP_B = 60
 WIDTH = 1200
-HIGHT = 675
+HEIGHT = 675
 
 pygame.init()
-screen = pygame.display.set_mode((WIDTH, HIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Generation Algorithm")
 clock = pygame.time.Clock()
 
@@ -93,7 +93,7 @@ class Cell_A(pygame.sprite.Sprite):
         if self.rect.x > WIDTH or self.rect.x < 0:
             self.rect.x -= self.speed * np.cos((self.degree / 180) * 3.14159)
             self.degree = 180-self.degree
-        if self.rect.y > HIGHT or self.rect.y < 0:
+        if self.rect.y > HEIGHT or self.rect.y < 0:
             self.rect.y -= self.speed * np.sin((self.degree / 180) * 3.14159)
             self.degree = -self.degree
         
@@ -161,7 +161,7 @@ class Cell_B(pygame.sprite.Sprite):
         if self.rect.x > WIDTH or self.rect.x < 0:
             self.rect.x -= self.speed * np.cos((self.degree / 180) * 3.14159)
             self.degree = 180-self.degree
-        if self.rect.y > HIGHT or self.rect.y < 0:
+        if self.rect.y > HEIGHT or self.rect.y < 0:
             self.rect.y -= self.speed * np.sin((self.degree / 180) * 3.14159)
             self.degree = -self.degree
         
@@ -187,12 +187,12 @@ nutrient = pygame.sprite.Group()
 for i in range(POP_B):    
     weight1 = np.random.rand(13, 8) * 10 - 5
     weight2 = np.random.rand(8, 2) * 10 - 5
-    cell = Cell_B(np.random.randint(5, WIDTH-5), np.random.randint(5, HIGHT-5), weight1, weight2)
+    cell = Cell_B(np.random.randint(5, WIDTH-5), np.random.randint(5, HEIGHT-5), weight1, weight2)
     cell_B.add(cell)
 for i in range(POP_A):
     weight1 = np.random.rand(25, 8) * 10 - 5
     weight2 = np.random.rand(8, 2) * 10 - 5
-    cell = Cell_A(np.random.randint(5, WIDTH-5), np.random.randint(5, HIGHT-5), weight1, weight2)
+    cell = Cell_A(np.random.randint(5, WIDTH-5), np.random.randint(5, HEIGHT-5), weight1, weight2)
     cell_A.add(cell)
 
 
@@ -207,7 +207,7 @@ while running:
     clock.tick(100)
     time += 0.01
     for i in range(3):
-        cell = Nutrient(np.random.randint(5, WIDTH-5), np.random.randint(5, HIGHT-5))
+        cell = Nutrient(np.random.randint(5, WIDTH-5), np.random.randint(5, HEIGHT-5))
         nutrient.add(cell)
     
     for event in pygame.event.get():
