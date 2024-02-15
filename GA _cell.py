@@ -153,8 +153,7 @@ class Cell_B(pygame.sprite.Sprite):
       
         
         self.output_layer = self.network()
-        self.size = 1.5
-        self.speed = 3 + (self.output_layer[0, 1]) * 2
+        self.speed = 3.1 + (self.output_layer[0, 1]) * 2
         self.degree += self.output_layer[0, 0] * 5
         self.rect.x += self.speed * np.cos((self.degree / 180) * 3.14159)
         self.rect.y += self.speed * np.sin((self.degree / 180) * 3.14159)
@@ -207,7 +206,7 @@ time = 0
 while running:
     clock.tick(100)
     time += 0.01
-    for i in range(2):
+    for i in range(3):
         cell = Nutrient(np.random.randint(5, WIDTH-5), np.random.randint(5, HIGHT-5))
         nutrient.add(cell)
     
