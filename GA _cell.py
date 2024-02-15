@@ -1,6 +1,7 @@
 import numpy as np
 import pygame
 import matplotlib.pyplot as plt
+import imageio
 
 
 def sigmoid(z):
@@ -19,14 +20,16 @@ def mutate(weight):
     return weight
 
 
-POP_A = 600
-POP_B = 300
-WIDTH = 1600
-HEIGHT = 900
-
+# Constants
+POP_A = 200
+POP_B = 20
+WIDTH = 1200
+HEIGHT = 688
 PI = np.pi
-
 MARGIN = 5
+
+save_video = False
+
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -235,6 +238,8 @@ for i in range(POP_A):
 
 running = True
 
+frames = []
+
 list1 = []
 list2 = []
 list3 = []
@@ -290,6 +295,12 @@ while running:
 
     # update display
     pygame.display.update()
+    if save_video:
+        frames.append(pygame.surfarray.array3d(screen).copy())
+
+# Convert frames to video
+if save_video:
+    imageio.mimsave('video.mp4', frames)
 
 pygame.quit()
 
