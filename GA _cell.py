@@ -28,7 +28,7 @@ HEIGHT = 688
 PI = np.pi
 MARGIN = 5
 
-save_video = False
+save_video = True
 
 
 pygame.init()
@@ -300,7 +300,7 @@ while running:
 
 # Convert frames to video
 if save_video:
-    imageio.mimsave('video.mp4', frames)
+    imageio.mimsave('video.mp4', frames, fps=100)
 
 pygame.quit()
 
