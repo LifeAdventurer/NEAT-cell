@@ -10,9 +10,16 @@ python = "^3.11"
 pygame = "^2.5.2"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.2.0"
 isort = "^5.13.2"
+black = "^24.2.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 80
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
