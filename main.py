@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pygame
 
-from cell import Cell_A, Cell_B, add_cell
+from cell import PredatorCell, PreyCell, add_cell
 from constants import HEIGHT, MARGIN, PI, WIDTH
 from nutrient import Nutrient
 from sensor import Sensor
@@ -14,10 +14,10 @@ from sensor import Sensor
 save_video = True
 
 nutrient = pygame.sprite.Group()
-cell_A = pygame.sprite.Group()
-cell_B = pygame.sprite.Group()
+prey_cell = pygame.sprite.Group()
+predator_cell = pygame.sprite.Group()
 
-add_cell(cell_A, cell_B)
+add_cell(prey_cell, predator_cell)
 
 # for generating video.mp4
 frames = []
@@ -53,33 +53,33 @@ while running:
     screen.fill((198, 198, 200))
 
     nutrient.draw(screen)
-    cell_A.draw(screen)
-    cell_B.draw(screen)
-    cell_A.update(cell_A, cell_B)
-    cell_B.update(cell_A, cell_B)
+    prey_cell.draw(screen)
+    predator_cell.draw(screen)
+    prey_cell.update(prey_cell, predator_cell)
+    predator_cell.update(prey_cell, predator_cell)
 
-    hits = pygame.sprite.groupcollide(cell_B, cell_A, False, True)
+    hits = pygame.sprite.groupcollide(predator_cell, prey_cell, False, True)
     for hit in hits:
         hit.eat()
 
-    hits = pygame.sprite.groupcollide(cell_A, nutrient, False, True)
+    hits = pygame.sprite.groupcollide(prey_cell, nutrient, False, True)
     for hit in hits:
         hit.eat()
 
     list1.append(time)
-    list2.append(len(cell_A))
-    list3.append(len(cell_B))
+    list2.append(len(prey_cell))
+    list3.append(len(predator_cell))
 
     print(
         "Time:",
         round(time, 2),
         "s   cell A population:",
-        len(cell_A),
+        len(prey_cell),
         "   cell B population:",
-        len(cell_B),
+        len(predator_cell),
     )
 
-    if len(cell_B) == 0:
+    if len(predator_cell) == 0:
         running = False
     # update display
     pygame.display.update()
