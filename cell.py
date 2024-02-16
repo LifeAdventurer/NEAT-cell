@@ -85,10 +85,10 @@ class PreyCell(pygame.sprite.Sprite):
         self.rect.x += self.speed * np.cos(angle_rad)
         self.rect.y += self.speed * np.sin(angle_rad)
 
-        if self.rect.x > WIDTH or self.rect.x < 0:
+        if self.rect.x + MARGIN >= WIDTH or self.rect.x <= MARGIN:
             self.rect.x -= self.speed * np.cos(angle_rad)
             self.degree = 180 - self.degree
-        if self.rect.y > HEIGHT or self.rect.y < 0:
+        if self.rect.y + MARGIN >= HEIGHT or self.rect.y <= MARGIN:
             self.rect.y -= self.speed * np.sin(angle_rad)
             self.degree = -self.degree
 
@@ -160,10 +160,10 @@ class PredatorCell(pygame.sprite.Sprite):
         self.rect.x += self.speed * np.cos(angle_rad)
         self.rect.y += self.speed * np.sin(angle_rad)
 
-        if self.rect.x > WIDTH or self.rect.x < 0:
+        if self.rect.x + MARGIN >= WIDTH or self.rect.x <= MARGIN:
             self.rect.x -= self.speed * np.cos(angle_rad)
             self.degree = 180 - self.degree
-        if self.rect.y > HEIGHT or self.rect.y < 0:
+        if self.rect.y + MARGIN >= HEIGHT or self.rect.y <= MARGIN:
             self.rect.y -= self.speed * np.sin(angle_rad)
             self.degree = -self.degree
 

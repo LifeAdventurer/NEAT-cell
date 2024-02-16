@@ -2,7 +2,7 @@ import numpy as np
 
 WIDTH = 1200
 HEIGHT = 688
-MARGIN = 5
+MARGIN = 10
 
 PI = np.pi
 
