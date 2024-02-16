@@ -92,17 +92,21 @@ pygame.quit()
 if save_video:
     imageio.mimsave('video.mp4', frames, fps=100)
 
+fig, axs = plt.subplots(2, 1, figsize=(8, 6))
 
-plt.plot([], [], color="m", label="cell A population", linewidth=5)
-plt.plot([], [], color="c", label="cell B population", linewidth=5)
+axs[0].stackplot(list1, list2, list3, colors=["m", "c"])
+axs[0].set_xlabel("time")
+axs[0].set_ylabel("population")
+axs[0].legend(["cell A population", "cell B population"])
 
-plt.stackplot(list1, list2, list3, colors=["m", "c"])
+axs[1].plot(list1, list2, color="m", label="cell A population", linewidth=2)
+axs[1].plot(list1, list3, color="c", label="cell B population", linewidth=2)
+axs[1].set_xlabel("time")
+axs[1].set_ylabel("population")
+axs[1].legend()
 
-plt.xlabel("time")
-plt.ylabel("population")
+plt.tight_layout()
 
-plt.legend()
-plt.show()
+plt.savefig("result_plot.png")
 
-plt.plot(list1, list2, list1, list3)
 plt.show()
