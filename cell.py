@@ -2,18 +2,18 @@ import numpy as np
 import pygame
 
 from constants import (
-    CELL_A_DECR_ENERGY,
-    CELL_A_ENERGY,
-    CELL_B_DECR_ENERGY,
-    CELL_B_ENERGY,
     CELL_SIZE,
     HEIGHT,
     MARGIN,
     MUTATE_PROB,
     NUTRIENT_ENERGY,
     PI,
-    POP_A,
-    POP_B,
+    PREDATOR_CELL_DECR_ENERGY,
+    PREDATOR_CELL_ENERGY,
+    PREDATOR_POP,
+    PREY_CELL_DECR_ENERGY,
+    PREY_CELL_ENERGY,
+    PREY_POP,
     WIDTH,
 )
 from sensor import Sensor
@@ -31,7 +31,7 @@ def mutate(weight):
     return weight
 
 
-class Cell_A(pygame.sprite.Sprite):
+class PreyCell(pygame.sprite.Sprite):
     def __init__(self, x, y, weight1, weight2):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
@@ -42,9 +42,9 @@ class Cell_A(pygame.sprite.Sprite):
         self.weight1 = weight1
         self.weight2 = weight2
         self.degree = np.random.randint(0, 360)
-        self.energy = CELL_A_ENERGY
+        self.energy = PREY_CELL_ENERGY
 
-    def network(self, cell_B):
+    def network(self, predator_cell):
         self.input_layer = np.zeros((1, 25))
 
         for j in range(25):
@@ -57,7 +57,7 @@ class Cell_A(pygame.sprite.Sprite):
 
                 if any(
                     pygame.Rect(sensor_front.rect).colliderect(cell.rect)
-                    for cell in cell_B
+                    for cell in predator_cell
                 ):
                     self.input_layer[0, j] = 1 + i
                     sensor_front.Kill()
@@ -68,7 +68,7 @@ class Cell_A(pygame.sprite.Sprite):
             sigmoid(self.input_layer.dot(self.weight1)).dot(self.weight2)
         )
 
-    def update(self, cell_A, cell_B):
+    def update(self, prey_cell, predator_cell):
 
         # show sensor
         # for j in range(25):
@@ -78,7 +78,7 @@ class Cell_A(pygame.sprite.Sprite):
         #                                              self.rect.center[1] + (15 + 20 * i) * np.sin(((self.degree - 90 + 7.5 * j) / 180) * PI))
         #         pygame.draw.rect(screen, (255, 150, 150), self.obstacle_hitbox_front)
 
-        self.output_layer = self.network(cell_B)
+        self.output_layer = self.network(predator_cell)
         self.speed = (self.output_layer[0, 1]) * 4
         self.degree += self.output_layer[0, 0] * 5
         angle_rad = (self.degree / 180) * PI
@@ -92,22 +92,22 @@ class Cell_A(pygame.sprite.Sprite):
             self.rect.y -= self.speed * np.sin(angle_rad)
             self.degree = -self.degree
 
-        self.energy -= CELL_A_DECR_ENERGY + np.abs(self.speed) / 500
+        self.energy -= PREY_CELL_DECR_ENERGY + np.abs(self.speed) / 500
         if self.energy <= 0:
             self.kill()
 
-        elif self.energy >= CELL_A_ENERGY * 2:
-            self.energy = CELL_A_ENERGY
+        elif self.energy >= PREY_CELL_ENERGY * 2:
+            self.energy = PREY_CELL_ENERGY
             weight1 = mutate(self.weight1)
             weight2 = mutate(self.weight2)
-            cell = Cell_A(self.rect.x, self.rect.y, weight1, weight2)
-            cell_A.add(cell)
+            cell = PreyCell(self.rect.x, self.rect.y, weight1, weight2)
+            prey_cell.add(cell)
 
     def eat(self):
         self.energy += NUTRIENT_ENERGY
 
 
-class Cell_B(pygame.sprite.Sprite):
+class PredatorCell(pygame.sprite.Sprite):
     def __init__(self, x, y, weight1, weight2):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
@@ -118,9 +118,9 @@ class Cell_B(pygame.sprite.Sprite):
         self.weight1 = weight1
         self.weight2 = weight2
         self.degree = np.random.randint(0, 360)
-        self.energy = CELL_B_ENERGY
+        self.energy = PREDATOR_CELL_ENERGY
 
-    def network(self, cell_A):
+    def network(self, prey_cell):
         self.input_layer = np.zeros((1, 13))
 
         for j in range(13):
@@ -133,7 +133,7 @@ class Cell_B(pygame.sprite.Sprite):
 
                 if any(
                     pygame.Rect(sensor_front.rect).colliderect(cell.rect)
-                    for cell in cell_A
+                    for cell in prey_cell
                 ):
                     self.input_layer[0, j] = 1 + i
                     sensor_front.Kill()
@@ -144,7 +144,7 @@ class Cell_B(pygame.sprite.Sprite):
             sigmoid(self.input_layer.dot(self.weight1)).dot(self.weight2)
         )
 
-    def update(self, cell_A, cell_B):
+    def update(self, prey_cell, predator_cell):
 
         # for j in range(13):
         #     for i in range(5):
@@ -153,7 +153,7 @@ class Cell_B(pygame.sprite.Sprite):
         #                                              self.rect.center[1] + (15 + 20 * i) * np.sin(((self.degree - 30 + 5 * j) / 180) * PI))
         #         pygame.draw.rect(screen, (255, 150, 150), self.obstacle_hitbox_front)
 
-        self.output_layer = self.network(cell_A)
+        self.output_layer = self.network(prey_cell)
         self.speed = 1 + (self.output_layer[0, 1]) * 2
         self.degree += self.output_layer[0, 0] * 5
         angle_rad = (self.degree / 180) * PI
@@ -167,41 +167,41 @@ class Cell_B(pygame.sprite.Sprite):
             self.rect.y -= self.speed * np.sin(angle_rad)
             self.degree = -self.degree
 
-        self.energy -= CELL_B_DECR_ENERGY + np.abs(self.speed) / 300
+        self.energy -= PREDATOR_CELL_DECR_ENERGY + np.abs(self.speed) / 300
         if self.energy <= 0:
             self.kill()
 
-        elif self.energy >= CELL_B_ENERGY * 2:
-            self.energy = CELL_A_ENERGY
+        elif self.energy >= PREDATOR_CELL_ENERGY * 2:
+            self.energy = PREY_CELL_ENERGY
             weight1 = mutate(self.weight1)
             weight2 = mutate(self.weight2)
-            cell = Cell_B(self.rect.x, self.rect.y, weight1, weight2)
-            cell_B.add(cell)
+            cell = PredatorCell(self.rect.x, self.rect.y, weight1, weight2)
+            predator_cell.add(cell)
 
     def eat(self):
-        self.energy += CELL_A_ENERGY
+        self.energy += PREY_CELL_ENERGY
         self.degree = (self.degree + 180) % 360
 
 
-def add_cell(cell_A, cell_B):
-    for i in range(POP_A):
+def add_cell(prey_cell, predator_cell):
+    for i in range(PREY_POP):
         weight1 = np.random.uniform(-5, 5, size=(25, 8))
         weight2 = np.random.uniform(-5, 5, size=(8, 2))
-        cell = Cell_A(
+        cell = PreyCell(
             np.random.randint(MARGIN, WIDTH - MARGIN),
             np.random.randint(MARGIN, HEIGHT - MARGIN),
             weight1,
             weight2,
         )
-        cell_A.add(cell)
+        prey_cell.add(cell)
 
-    for i in range(POP_B):
+    for i in range(PREDATOR_POP):
         weight1 = np.random.uniform(-5, 5, size=(13, 8))
         weight2 = np.random.uniform(-5, 5, size=(8, 2))
-        cell = Cell_B(
+        cell = PredatorCell(
             np.random.randint(MARGIN, WIDTH - MARGIN),
             np.random.randint(MARGIN, HEIGHT - MARGIN),
             weight1,
             weight2,
         )
-        cell_B.add(cell)
+        predator_cell.add(cell)
