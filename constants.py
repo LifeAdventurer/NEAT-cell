@@ -6,8 +6,8 @@ MARGIN = 5
 
 PI = np.pi
 
-POP_A = 400
-POP_B = 30
+POP_A = 50
+POP_B = 5
 
 MUTATE_PROB = 0.02
 
