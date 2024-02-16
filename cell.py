@@ -154,7 +154,7 @@ class Cell_B(pygame.sprite.Sprite):
         #         pygame.draw.rect(screen, (255, 150, 150), self.obstacle_hitbox_front)
 
         self.output_layer = self.network(cell_A)
-        self.speed = 3.1 + (self.output_layer[0, 1]) * 2
+        self.speed = 1 + (self.output_layer[0, 1]) * 2
         self.degree += self.output_layer[0, 0] * 5
         angle_rad = (self.degree / 180) * PI
         self.rect.x += self.speed * np.cos(angle_rad)
