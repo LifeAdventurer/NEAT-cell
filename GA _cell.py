@@ -21,8 +21,8 @@ def mutate(weight):
 
 
 # Constants
-POP_A = 200
-POP_B = 20
+POP_A = 400
+POP_B = 30
 WIDTH = 1200
 HEIGHT = 688
 PI = np.pi
@@ -206,7 +206,7 @@ class Cell_B(pygame.sprite.Sprite):
             cell_B.add(cell)
 
     def eat(self):
-        self.energy += 25
+        self.energy += 20
         self.degree += 180
 
 
@@ -251,7 +251,7 @@ while running:
     clock.tick(100)
     time += 0.01
 
-    for i in range(3):
+    for i in range(6):
         nutrient.add(
             Nutrient(
                 np.random.randint(MARGIN, WIDTH - MARGIN),
@@ -293,16 +293,20 @@ while running:
         len(cell_B),
     )
 
+    if len(cell_B) == 0:
+        running = False
     # update display
     pygame.display.update()
     if save_video:
         frames.append(pygame.surfarray.array3d(screen).copy())
 
+pygame.quit()
+
 # Convert frames to video
 if save_video:
     imageio.mimsave('video.mp4', frames, fps=100)
 
-pygame.quit()
+
 
 plt.plot([], [], color="m", label="cell A population", linewidth=5)
 plt.plot([], [], color="c", label="cell B population", linewidth=5)
