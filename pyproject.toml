@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.11"
 pygame = "^2.5.2"
 imageio = "^2.34.0"
+matplotlib = "^3.8.3"
+numpy = "^1.26.4"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
