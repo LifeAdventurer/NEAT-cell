@@ -4,7 +4,7 @@ import numpy as np
 import pygame
 
 from cell import PredatorCell, PreyCell, add_cell
-from constants import HEIGHT, MARGIN, PI, WIDTH, CLOCK_TICK, FPS, NUTRIENT_PER_TICK
+from constants import CLOCK_TICK, FPS, HEIGHT, MARGIN, NUTRIENT_PER_TICK, PI, WIDTH
 from nutrient import Nutrient
 
 # def RELU(z):
@@ -84,7 +84,7 @@ while running:
     pygame.display.update()
     if save_video and time % (CLOCK_TICK / FPS) == 0:
         frames.append(pygame.surfarray.array3d(screen).copy())
-    
+
 
 pygame.quit()
 
@@ -97,7 +97,9 @@ axs[0].set_ylabel("population")
 axs[0].legend(["Prey Cell population", "Predator Cell population"])
 
 axs[1].plot(list1, list2, color="m", label="Prey Cell population", linewidth=2)
-axs[1].plot(list1, list3, color="c", label="Predator Cell population", linewidth=2)
+axs[1].plot(
+    list1, list3, color="c", label="Predator Cell population", linewidth=2
+)
 axs[1].set_xlabel("time")
 axs[1].set_ylabel("population")
 axs[1].legend()
