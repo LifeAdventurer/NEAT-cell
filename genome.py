@@ -4,6 +4,7 @@
 
 
 import random
+
 import numpy as np
 
 
@@ -129,20 +130,29 @@ class Genome:
     def as_dict(self):
         nodes = dict()
         for i, node in enumerate(self.nodes):
-            nodes[str(i)] = {"bias": node.bias,
-                             "is_input": node in self.inputs,
-                             "is_output": node in self.outputs,
-                             "is_hidden": node in self.hidden_nodes}
+            nodes[str(i)] = {
+                "bias": node.bias,
+                "is_input": node in self.inputs,
+                "is_output": node in self.outputs,
+                "is_hidden": node in self.hidden_nodes,
+            }
 
         edges = dict()
         for i, edge in enumerate(self.edges):
-            edges[str(i)] = {"weight": edge.weight,
-                             "start": self.nodes.index(edge.start),
-                             "end": self.nodes.index(edge.end)}
+            edges[str(i)] = {
+                "weight": edge.weight,
+                "start": self.nodes.index(edge.start),
+                "end": self.nodes.index(edge.end),
+            }
 
-        return {"nodes": nodes, "edges": edges,
-                "input_count": len(self.inputs), "output_count": len(self.outputs),
-                "node_count": len(self.nodes), "edge_count": len(self.edges)}
+        return {
+            "nodes": nodes,
+            "edges": edges,
+            "input_count": len(self.inputs),
+            "output_count": len(self.outputs),
+            "node_count": len(self.nodes),
+            "edge_count": len(self.edges),
+        }
 
     @classmethod
     def from_dict(cls, dict: dict):
@@ -153,13 +163,13 @@ class Genome:
                 genome.add_node(dict["nodes"][str(i)]["bias"])
 
         for i in range(dict["edge_count"]):
-            genome.add_edge(genome.nodes[dict["edges"][str(i)]["start"]],
-                            genome.nodes[dict["edges"][str(i)]["end"]],
-                            dict["edges"][str(i)]["weight"])
+            genome.add_edge(
+                genome.nodes[dict["edges"][str(i)]["start"]],
+                genome.nodes[dict["edges"][str(i)]["end"]],
+                dict["edges"][str(i)]["weight"],
+            )
 
         return genome
-
-
 
     @staticmethod
     def get_random(standard_deviation=1.0, mean_value=0.0):
