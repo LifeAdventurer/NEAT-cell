@@ -79,15 +79,17 @@ class PreyCell(pygame.sprite.Sprite):
         self.speed += self.output_layer[1]
         self.degree += self.output_layer[0]
         angle_rad = (self.degree / 180) * PI
-        self.rect.x += self.speed * np.cos(angle_rad)
-        self.rect.y += self.speed * np.sin(angle_rad)
 
-        if self.rect.x + MARGIN >= WIDTH or self.rect.x <= MARGIN:
-            self.rect.x -= self.speed * np.cos(angle_rad)
+        new_x = self.rect.x + self.speed * np.cos(angle_rad)
+        new_y = self.rect.y + self.speed * np.sin(angle_rad)
+
+        if new_x + MARGIN >= WIDTH or new_x <= MARGIN:
             self.degree = 180 - self.degree
-        if self.rect.y + MARGIN >= HEIGHT or self.rect.y <= MARGIN:
-            self.rect.y -= self.speed * np.sin(angle_rad)
+        elif new_y + MARGIN >= HEIGHT or new_y <= MARGIN:
             self.degree = -self.degree
+        else:
+            self.rect.x = new_x
+            self.rect.y = new_y
 
         self.energy -= PREY_CELL_DECR_ENERGY + (self.speed**2) / 400
         if self.energy <= 0:
@@ -158,15 +160,17 @@ class PredatorCell(pygame.sprite.Sprite):
         self.speed += self.output_layer[1]
         self.degree += self.output_layer[0]
         angle_rad = (self.degree / 180) * PI
-        self.rect.x += self.speed * np.cos(angle_rad)
-        self.rect.y += self.speed * np.sin(angle_rad)
 
-        if self.rect.x + MARGIN >= WIDTH or self.rect.x <= MARGIN:
-            self.rect.x -= self.speed * np.cos(angle_rad)
+        new_x = self.rect.x + self.speed * np.cos(angle_rad)
+        new_y = self.rect.y + self.speed * np.sin(angle_rad)
+
+        if new_x + MARGIN >= WIDTH or new_x <= MARGIN:
             self.degree = 180 - self.degree
-        if self.rect.y + MARGIN >= HEIGHT or self.rect.y <= MARGIN:
-            self.rect.y -= self.speed * np.sin(angle_rad)
+        elif new_y + MARGIN >= HEIGHT or new_y <= MARGIN:
             self.degree = -self.degree
+        else:
+            self.rect.x = new_x
+            self.rect.y = new_y
 
         self.energy -= PREDATOR_CELL_DECR_ENERGY + (self.speed**2) / 400
         if self.energy <= 0:
