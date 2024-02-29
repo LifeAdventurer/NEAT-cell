@@ -72,10 +72,14 @@ while running:
     print(
         "Time:",
         f"{time / CLOCK_TICK:.2f}",
-        "s   Prey Cell population:",
+        "s   Prey Cell pop:",
         len(prey_cell),
-        "   Predator Cell population:",
+        "   Predator Cell pop:",
         len(predator_cell),
+        "   Max Prey Cell gen:",
+        max(cell.generation for cell in prey_cell),
+        "   Max Predator Cell gen:",
+        max(cell.generation for cell in predator_cell),
     )
 
     if len(predator_cell) == 0:

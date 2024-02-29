@@ -19,15 +19,14 @@ from constants import (
     PREY_VIEW_ANGLE,
     WIDTH,
 )
-from genome import Genome
+from nn import NEAT
 
 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
-
 class PreyCell(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, generation=0):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
         self.image.fill((90, 170, 90))  # green
@@ -37,6 +36,7 @@ class PreyCell(pygame.sprite.Sprite):
         self.degree = np.random.randint(0, 360)
         self.energy = PREY_CELL_ENERGY
         self.speed = 0
+        self.generation = generation
 
     def network(self, predator_cell):
         self.input_layer = np.zeros((1, PREY_SENSORS + 2))
@@ -72,7 +72,7 @@ class PreyCell(pygame.sprite.Sprite):
             if collide:
                 self.input_layer[0, j] = mn_distance
 
-        return Genome.activate(Genome(PREY_SENSORS + 2, 2), self.input_layer)
+        return NEAT.activate(NEAT(PREY_SENSORS + 2, 2), self.input_layer)
 
     def update(self, prey_cell, predator_cell):
         self.output_layer = self.network(predator_cell)
@@ -95,7 +95,7 @@ class PreyCell(pygame.sprite.Sprite):
 
         elif self.energy >= PREY_CELL_ENERGY * 2:
             self.energy = PREY_CELL_ENERGY
-            cell = PreyCell(self.rect.x, self.rect.y)
+            cell = PreyCell(self.rect.x, self.rect.y, self.generation + 1)
             prey_cell.add(cell)
 
     def eat(self):
@@ -103,7 +103,7 @@ class PreyCell(pygame.sprite.Sprite):
 
 
 class PredatorCell(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, generation=0):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
         self.image.fill((170, 90, 90))  # red
@@ -113,6 +113,7 @@ class PredatorCell(pygame.sprite.Sprite):
         self.degree = np.random.randint(0, 360)
         self.energy = PREDATOR_CELL_ENERGY
         self.speed = 0
+        self.generation = generation
 
     def network(self, prey_cell):
         self.input_layer = np.zeros((1, PREDATOR_SENSORS + 2))
@@ -148,8 +149,8 @@ class PredatorCell(pygame.sprite.Sprite):
             if collide:
                 self.input_layer[0, j] = mn_distance
 
-        return Genome.activate(
-            Genome(PREDATOR_SENSORS + 2, 2), self.input_layer
+        return NEAT.activate(
+            NEAT(PREDATOR_SENSORS + 2, 2), self.input_layer
         )
 
     def update(self, prey_cell, predator_cell):
@@ -173,7 +174,7 @@ class PredatorCell(pygame.sprite.Sprite):
 
         elif self.energy >= PREDATOR_CELL_ENERGY * 2:
             self.energy = PREDATOR_CELL_ENERGY
-            cell = PredatorCell(self.rect.x, self.rect.y)
+            cell = PredatorCell(self.rect.x, self.rect.y, self.generation + 1)
             predator_cell.add(cell)
 
     def eat(self):
