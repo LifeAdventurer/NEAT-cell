@@ -98,9 +98,8 @@ class PreyCell(pygame.sprite.Sprite):
             self.kill()
 
         elif self.energy >= PREY_CELL_ENERGY * 2:
-            self.energy = PREY_CELL_ENERGY
-            cell = PreyCell(self.rect.x, self.rect.y, self.generation + 1)
-            prey_cell.add(cell)
+            self.energy -= PREY_CELL_ENERGY
+            prey_cell.add(PreyCell(self.rect.x, self.rect.y, self.generation + 1))
 
     def eat(self):
         self.energy += NUTRIENT_ENERGY
@@ -181,9 +180,8 @@ class PredatorCell(pygame.sprite.Sprite):
             self.kill()
 
         elif self.energy >= PREDATOR_CELL_ENERGY * 2:
-            self.energy = PREDATOR_CELL_ENERGY
-            cell = PredatorCell(self.rect.x, self.rect.y, self.generation + 1)
-            predator_cell.add(cell)
+            self.energy -= PREDATOR_CELL_ENERGY
+            predator_cell.add(PredatorCell(self.rect.x, self.rect.y, self.generation + 1))
 
     def eat(self):
         self.energy += PREY_CELL_ENERGY
