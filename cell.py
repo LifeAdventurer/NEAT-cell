@@ -37,6 +37,7 @@ class PreyCell(pygame.sprite.Sprite):
         self.energy = PREY_CELL_ENERGY
         self.speed = 0
         self.generation = generation
+        self.time_alive = 0.0
 
     def network(self, predator_cell):
         self.input_layer = np.zeros((1, PREY_SENSORS + 2))
@@ -75,6 +76,7 @@ class PreyCell(pygame.sprite.Sprite):
         return NEAT.activate(NEAT(PREY_SENSORS + 2, 2), self.input_layer)
 
     def update(self, prey_cell, predator_cell):
+        self.time_alive += 0.01
         self.output_layer = self.network(predator_cell)
         self.speed += self.output_layer[1]
         self.degree += self.output_layer[0]
@@ -116,6 +118,7 @@ class PredatorCell(pygame.sprite.Sprite):
         self.energy = PREDATOR_CELL_ENERGY
         self.speed = 0
         self.generation = generation
+        self.time_alive = 0.0
 
     def network(self, prey_cell):
         self.input_layer = np.zeros((1, PREDATOR_SENSORS + 2))
@@ -156,6 +159,7 @@ class PredatorCell(pygame.sprite.Sprite):
         )
 
     def update(self, prey_cell, predator_cell):
+        self.time_alive += 0.01
         self.output_layer = self.network(prey_cell)
         self.speed += self.output_layer[1]
         self.degree += self.output_layer[0]
