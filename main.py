@@ -28,9 +28,13 @@ clock = pygame.time.Clock()
 
 running = True
 time = 0
-list1 = []
-list2 = []
-list3 = []
+time_tick = []
+prey_cell_count = []
+predator_cell_count = []
+prey_cell_generation = []
+predator_cell_generation = []
+prey_cell_time_alive = []
+predator_cell_time_alive = []
 
 while running:
     clock.tick(CLOCK_TICK)
@@ -65,9 +69,18 @@ while running:
     for hit in hits:
         hit.eat()
 
-    list1.append(time / CLOCK_TICK)
-    list2.append(len(prey_cell))
-    list3.append(len(predator_cell))
+    time_tick.append(time / CLOCK_TICK)
+    prey_cell_count.append(len(prey_cell))
+    predator_cell_count.append(len(predator_cell))
+
+    mx_prey_cell_gen = max(cell.generation for cell in prey_cell)
+    mx_predator_cell_gen = max(cell.generation for cell in predator_cell)
+    mx_prey_cell_time_alive = max(f"{cell.time_alive:.2f} " for cell in prey_cell)
+    mx_predator_cell_time_alive = max(f"{cell.time_alive:.2f}" for cell in predator_cell)
+    prey_cell_generation.append(mx_prey_cell_gen)
+    predator_cell_generation.append(mx_predator_cell_gen)
+    prey_cell_time_alive.append(mx_prey_cell_time_alive)
+    predator_cell_time_alive.append(mx_predator_cell_time_alive)
 
     print(
         "Time:",
@@ -77,13 +90,13 @@ while running:
         " PredatorPop:",
         len(predator_cell),
         " MaxPreyGen:",
-        max(cell.generation for cell in prey_cell),
+        mx_prey_cell_gen,
         " MaxPredatorGen:",
-        max(cell.generation for cell in predator_cell),
+        mx_predator_cell_gen,
         " MaxPreyTimeAlive:",
-        max(f"{cell.time_alive:.2f} " for cell in prey_cell),
+        mx_prey_cell_time_alive,
         " MaxPredatorTimeAlive: ",
-        max(f"{cell.time_alive:.2f}" for cell in predator_cell),
+        mx_predator_cell_time_alive,
     )
 
     if len(predator_cell) == 0:
@@ -97,20 +110,33 @@ while running:
 pygame.quit()
 
 
-fig, axs = plt.subplots(2, 1, figsize=(8, 6))
+fig, axs = plt.subplots(3, 1, figsize=(8, 6))
 
-axs[0].stackplot(list1, list2, list3, colors=["m", "c"])
+# Population
+axs[0].plot(time_tick, prey_cell_count, color="m", label="Prey Cell Population", linewidth=2)
+axs[0].plot(
+    time_tick, predator_cell_count, color="c", label="Predator Cell Population", linewidth=2
+)
 axs[0].set_xlabel("time")
 axs[0].set_ylabel("population")
-axs[0].legend(["Prey Cell population", "Predator Cell population"])
+axs[0].legend()
 
-axs[1].plot(list1, list2, color="m", label="Prey Cell population", linewidth=2)
+# Generation
+axs[1].plot(time_tick, prey_cell_generation, color="m", label="Prey Cell Generation", linewidth=2)
 axs[1].plot(
-    list1, list3, color="c", label="Predator Cell population", linewidth=2
+    time_tick, predator_cell_generation, color="c", label="Predator Cell Generation", linewidth=2
 )
 axs[1].set_xlabel("time")
-axs[1].set_ylabel("population")
+axs[1].set_ylabel("generation")
 axs[1].legend()
+
+# Time Alive
+axs[2].plot(time_tick, prey_cell_time_alive, color="m", label="Prey Cell Time Alive", linewidth=2)
+axs[2].plot(time_tick, predator_cell_time_alive, color="c", label="Predator Cell Time Alive", linewidth=2)
+axs[2].set_xlabel("time")
+axs[2].set_ylabel("time alive(s)")
+axs[2].legend()
+axs[2].set_yticks(axs[2].get_yticks()[::len(axs[2].get_yticks()) // 4])
 
 plt.tight_layout()
 
