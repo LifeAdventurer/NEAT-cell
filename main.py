@@ -79,8 +79,8 @@ while running:
     mx_predator_cell_time_alive = max(f"{cell.time_alive:.2f}" for cell in predator_cell)
     prey_cell_generation.append(mx_prey_cell_gen)
     predator_cell_generation.append(mx_predator_cell_gen)
-    prey_cell_time_alive.append(mx_prey_cell_time_alive)
-    predator_cell_time_alive.append(mx_predator_cell_time_alive)
+    prey_cell_time_alive.append(float(mx_prey_cell_time_alive))
+    predator_cell_time_alive.append(float(mx_predator_cell_time_alive))
 
     print(
         "Time:",
@@ -136,7 +136,6 @@ axs[2].plot(time_tick, predator_cell_time_alive, color="c", label="Predator Cell
 axs[2].set_xlabel("time")
 axs[2].set_ylabel("time alive(s)")
 axs[2].legend()
-axs[2].set_yticks(axs[2].get_yticks()[::len(axs[2].get_yticks()) // 4])
 
 plt.tight_layout()
 
